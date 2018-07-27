@@ -45,3 +45,93 @@ for count, word in lst[:50]:
 
 
 print("Thank You! Goodbye.")
+
+
+
+
+class TrieNode:
+
+    # Trie node class
+    def __init__(self):
+        self.children = [None] * 26
+
+        # isEndOfWord is True if node represent the end of the word
+        self.count  = 0
+        self.isEndOfWord = False
+
+    def increaseCount(self):
+        self.count += 1
+        print 'Count - %d - %s' % (self.count, ('T' if self.isEndOfWord else 'F'))
+
+
+class Trie:
+    # Trie data structure class
+    def __init__(self):
+        self.root = self.getNode()
+
+    def getNode(self):
+        # Returns new trie node (initialized to NULLs)
+        return TrieNode()
+
+    def _charToIndex(self, ch):
+        # private helper function
+        # Converts key current character into index
+        # use only 'a' through 'z' and lower case
+
+        return ord(ch) - ord('a')
+
+    def insert(self, key):
+
+        # If not present, inserts key into trie
+        # If the key is prefix of trie node,
+        # just marks leaf node
+        pCrawl = self.root
+        length = len(key)
+        for level in range(length):
+            index = self._charToIndex(key[level])
+
+            # if current character is not present
+            if not pCrawl.children[index]:
+                pCrawl.children[index] = self.getNode()
+            else:
+                print key[level]
+                pCrawl.children[index].increaseCount()
+            pCrawl = pCrawl.children[index]
+
+        # mark last node as leaf
+        pCrawl.isEndOfWord = True
+
+    def search(self, key):
+        # Search key in the trie
+        # Returns true if key presents
+        # in trie, else false
+        pCrawl = self.root
+        length = len(key)
+        for level in range(length):
+            index = self._charToIndex(key[level])
+            if not pCrawl.children[index]:
+                return False
+            pCrawl = pCrawl.children[index]
+
+        return pCrawl != None and pCrawl.isEndOfWord
+
+    def countOfWords(self, key):
+        pCrawl = self.root
+        
+
+'''wordCount(TrieNode root)
+    {
+        int result = 0;
+
+        // Leaf denotes end of a word
+        if (root.isLeaf)
+            result++;
+
+        for (int i = 0; i < ALPHABET_SIZE; i++)
+          if (root.children[i] != null )
+             result += wordCount(root.children[i]);
+
+        return result;
+    }'''
+
+
